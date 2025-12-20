@@ -1,0 +1,7 @@
+{
+  "name": "keys_api",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node keys_api.js"
+  }
+}
