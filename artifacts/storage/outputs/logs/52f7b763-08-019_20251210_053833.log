@@ -1,0 +1,11 @@
+==============================
+Timestamp:   20251210_053833
+Task ID:     52f7b763-08-019
+Title:       S8.019 - Deck / Narrative System
+Priority:    low
+Step ID:     8
+Source file: /data/data/com.termux/files/home/tasks/active/plan_52f7b763/52f7b763-08-019.json
+==============================
+
+TODO: Implement actual worker logic here.
+This is where YesQuid / agents / LLM calls would run.
