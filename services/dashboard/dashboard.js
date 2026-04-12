@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.static('.'));
 const PORT = 3001;
 
 app.get('/health', (req, res) => {
