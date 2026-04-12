@@ -1,0 +1,79 @@
+{
+  "plan_id": "31cca67c",
+  "goal": "Build a 10-slide Banani-ready Series A deck for SovereignGTP with valuation, ROI, compliance, and outreach sections.",
+  "created_at": "2025-12-09T23:17:14.906372",
+  "status": "partial",
+  "steps": [
+    {
+      "step_id": 1,
+      "title": "Market & Problem Validation",
+      "objective": "Deep dive into pain points and TAM",
+      "status": "failed",
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVxQAar2ZB3tbHSEf2L5d'}"
+    },
+    {
+      "step_id": 2,
+      "title": "Product Architecture & Roadmap",
+      "objective": "Define SovereignGTP tech stack & MVP",
+      "status": "failed",
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVxQAbHp79CkN38PzTo3o'}"
+    },
+    {
+      "step_id": 3,
+      "title": "Financial Model & Valuation",
+      "objective": "Build 5-year P&L, cap table, $XM pre-money case",
+      "status": "failed",
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVxQAbi7bCQvdWjvioNKx'}"
+    },
+    {
+      "step_id": 4,
+      "title": "Competitive Moat Analysis",
+      "objective": "Why we win vs OpenAI/Anthropic/etc",
+      "status": "failed",
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVxQAcXyYgd7dBXb5E7X2'}"
+    },
+    {
+      "step_id": 5,
+      "title": "Regulatory & Compliance Framing",
+      "objective": "GDPR, AI Act, data sovereignty strategy",
+      "status": "failed",
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVxQAczWLuRXgGT9sPFww'}"
+    },
+    {
+      "step_id": 6,
+      "title": "Go-to-Market & Traction Plan",
+      "objective": "First 10 design partners + revenue timeline",
+      "status": "failed",
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVxQAdUHC4x74MSbquT9h'}"
+    },
+    {
+      "step_id": 7,
+      "title": "Team & Advisors",
+      "objective": "Core team + killer advisory board",
+      "status": "failed",
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVxQAdqcFiuvuf46onSnc'}"
+    },
+    {
+      "step_id": 8,
+      "title": "Deck Design (Banani-ready)",
+      "objective": "10 perfect slides, Notion/Pitch/Gamma export",
+      "status": "failed",
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVxQAeTKChs6sYpQNgpbQ'}"
+    },
+    {
+      "step_id": 9,
+      "title": "Investor Targeting List",
+      "objective": "Top 50 funds + warm intros",
+      "status": "failed",
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVxQAeu6zJg5XY7FmpoPv'}"
+    },
+    {
+      "step_id": 10,
+      "title": "Outreach Sequences",
+      "objective": "Cold + warm email/copy + calendar links",
+      "status": "failed",
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CVxQAfKAH493emBkLaTwz'}"
+    }
+  ],
+  "completed_at": "2025-12-09T23:47:16.059440"
+}

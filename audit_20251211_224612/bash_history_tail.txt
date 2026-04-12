@@ -1,0 +1,300 @@
+# 4️⃣ Optional: move any logs from old location
+OLD_LOGS=~/sovereign-gumroad/logs/*
+if compgen -G "$OLD_LOGS" > /dev/null; then     mv $OLD_LOGS "$BASE/logs/" && echo "✅ Moved logs"; fi
+# 5️⃣ Optional: move repos
+OLD_REPOS=~/sovereign-gumroad/repos/*
+if compgen -G "$OLD_REPOS" > /dev/null; then     mv $OLD_REPOS "$BASE/repos/" && echo "✅ Moved repos"; fi
+# 6️⃣ Confirmation
+echo "📂 Final plan_aimeta001 structure:"
+tree -L 2 "$BASE" 2>/dev/null || ls -R "$BASE"
+echo "✅ Setup complete!"
+# Decrypt the archive
+gpg --output ~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1.zip --decrypt ~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1.zip.gpg
+# Verify checksum
+sha256sum -c ~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1-checksum.sha256
+# Go to the directory
+cd ~/storage/shared/AiMetaverse/plan_aimeta001
+# List to confirm
+ls -l
+sha256sum -c Sovereign_AI_Runner_Stack_v1-checksum.sha256
+cp /path/to/original/Sovereign_AI_Runner_Stack_v1-checksum.sha256 ~/storage/shared/AiMetaverse/plan_aimeta001/
+#!/data/data/com.termux/files/usr/bin/bash
+# setup_fullstack_aimeta.sh
+# Fully sets up plan_aimeta001 environment for AiMetaverse
+# 1️⃣ Base directory
+BASE=~/storage/shared/AiMetaverse/plan_aimeta001
+# 2️⃣ Create main directories
+mkdir -p "$BASE/artifacts"
+mkdir -p "$BASE/logs"
+mkdir -p "$BASE/repos"
+echo "✅ Directories created: artifacts, logs, repos"
+# 3️⃣ Move ZIP to artifacts if not already there
+ZIP_SRC="$BASE/Sovereign_AI_Runner_Stack_v1.zip"
+[ -f "$ZIP_SRC" ] && mv "$ZIP_SRC" "$BASE/artifacts/" && echo "✅ ZIP moved to artifacts"
+# 4️⃣ Generate checksum if missing
+CHECKSUM="$BASE/artifacts/Sovereign_AI_Runner_Stack_v1-checksum.sha256"
+if [ ! -f "$CHECKSUM" ]; then     cd "$BASE/artifacts";     sha256sum Sovereign_AI_Runner_Stack_v1.zip > Sovereign_AI_Runner_Stack_v1-checksum.sha256;     echo "✅ Checksum generated"; fi
+# 5️⃣ List contents for sanity check
+echo "📂 Directory structure:"
+tree -L 2 "$BASE" 2>/dev/null || ls -R "$BASE"
+# 6️⃣ Optional: Decrypt ZIP (if you had a GPG file)
+GPG_FILE="$BASE/artifacts/Sovereign_AI_Runner_Stack_v1.zip.gpg"
+if [ -f "$GPG_FILE" ]; then     gpg --output "$BASE/artifacts/Sovereign_AI_Runner_Stack_v1.zip" --decrypt "$GPG_FILE";     echo "✅ ZIP decrypted"; fi
+echo "✅ Fullstack setup complete!"
+cd ~/storage/shared/AiMetaverse/plan_aimeta001/artifacts
+sha256sum -c Sovereign_AI_Runner_Stack_v1-checksum.sha256
+cd ~/storage/shared/AiMetaverse/plan_aimeta001
+mv Sovereign_AI_Runner_Stack_v1.zip artifacts/
+mv Sovereign_AI_Runner_Stack_v1-checksum.sha256 artifacts/
+#!/data/data/com.termux/files/usr/bin/bash
+# install_sovereign.sh
+# YesQuidpro V2.1 Ultimate Fullstack Installer
+set -e
+LOGFILE=~/install_sovereign.log
+exec > >(tee -a "$LOGFILE") 2>&1
+echo "🚀 Starting Ultimate Fullstack Installation..."
+# -------------------------
+# 1️⃣ Base Paths and Files
+# -------------------------
+BASE=~/storage/shared/AiMetaverse/plan_aimeta001
+ARTIFACTS="$BASE/artifacts"
+LOGS="$BASE/logs"
+REPOS="$BASE/repos"
+ZIP_GPG="$BASE/Sovereign_AI_Runner_Stack_v1.zip.gpg"
+ZIP_DEC="$ARTIFACTS/Sovereign_AI_Runner_Stack_v1.zip"
+CHECKSUM="$BASE/Sovereign_AI_Runner_Stack_v1-checksum.sha256"
+FILES=(   "$ZIP_GPG"   "$CHECKSUM"   "$BASE/collection_20251210.txt"   "$BASE/README.md" )
+# -------------------------
+# 2️⃣ Create Directory Structure
+# -------------------------
+mkdir -p "$ARTIFACTS" "$LOGS" "$REPOS"
+echo "✅ Directories created: artifacts, logs, repos"
+# -------------------------
+# 3️⃣ Install Dependencies
+# -------------------------
+DEPENDENCIES=(gpg sha256sum unzip zip python3 pip tree)
+for pkg in "${DEPENDENCIES[@]}"; do     if ! command -v $pkg >/dev/null 2>&1; then         echo "⚠ Installing missing package: $pkg";         pkg install -y $pkg;     fi; done
+echo "✅ Dependencies verified"
+# -------------------------
+# 4️⃣ Copy / Validate Files
+# -------------------------
+for f in "${FILES[@]}"; do     if [ -f "$f" ]; then         cp "$f" "$ARTIFACTS/" && echo "✅ Copied $(basename $f) to artifacts";     else         echo "⚠ File missing: $f"
+    fi; done
+# -------------------------
+# 5️⃣ Decrypt ZIP
+# -------------------------
+if [ -f "$ZIP_GPG" ]; then     echo "🔒 Decrypting ZIP...";     gpg --yes --batch --output "$ZIP_DEC" --decrypt "$ZIP_GPG";     echo "✅ ZIP decrypted: $(basename $ZIP_DEC)"; fi
+# -------------------------
+# 6️⃣ Verify Checksum
+# -------------------------
+if [ -f "$CHECKSUM" ]; then     echo "🧾 Verifying checksum...";     (cd "$ARTIFACTS" && sha256sum -c "$(basename $CHECKSUM)" || echo "❌ Checksum FAILED");     echo "✅ Checksum verification complete"; fi
+# -------------------------
+# 7️⃣ Backup and Fix Configs
+# -------------------------
+cp ~/.bashrc ~/.bashrc.backup 2>/dev/null || true
+cp ~/.nanorc ~/.nanorc.backup 2>/dev/null || true
+echo "✅ Configs backed up"
+grep -qxF "export AI_METAVERSE_BASE=$BASE" ~/.bashrc || echo "export AI_METAVERSE_BASE=$BASE" >> ~/.bashrc
+echo "✅ .bashrc updated with AI_METAVERSE_BASE"
+# -------------------------
+# 8️⃣ Move old logs / repos
+# -------------------------
+OLD_LOGS=~/sovereign-gumroad/logs/*
+if compgen -G "$OLD_LOGS" > /dev/null; then     mv $OLD_LOGS "$LOGS/" && echo "✅ Old logs moved"; fi
+OLD_REPOS=~/sovereign-gumroad/repos/*
+if compgen -G "$OLD_REPOS" > /dev/null; then     mv $OLD_REPOS "$REPOS/" && echo "✅ Old repos moved"; fi
+# -------------------------
+# 9️⃣ Initialize Agents
+# -------------------------
+if [ -f "$ZIP_DEC" ]; then     echo "🤖 Running quick agent test...";     unzip -l "$ZIP_DEC" | head -10; fi
+# Example: you can also automatically launch agent scripts here
+# bash "$ARTIFACTS/agents/execute_plan.sh" &
+# -------------------------
+# 10️⃣ Setup Webhook (YesQuid)
+# -------------------------
+# Placeholder for webhook setup
+# export YESQUID_WEBHOOK_URL="https://yourwebhook.url"
+echo "🌐 YesQuid webhook ready (manual config may be required)"
+# -------------------------
+# 11️⃣ Final Report
+# -------------------------
+echo "✅ Fullstack Installation Complete!"
+tree -L 2 "$BASE" 2>/dev/null || ls -R "$BASE"
+echo "✨ To activate, run: source ~/.bashrc"
+echo "✨ Then check status: status"
+echo "💡 Log file: $LOGFILE"
+source ~/.bashrc
+status
+unzip -l ~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1.zip | head -20
+mv ~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1.zip ~/storage/shared/AiMetaverse/plan_aimeta001/
+nano secure_zip.sh
+# paste the code, then Ctrl+X → Y → Enter
+chmod +x secure_zip.sh
+./secure_zip.sh ~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1.zip
+plan_aimeta001/
+├── artifacts/                     # All generated files and ZIPs
+│   ├── Sovereign_AI_Runner_Stack_v1.zip.gpg
+│   ├── Sovereign_AI_Runner_Stack_v1-checksum.sha256
+│   └── (any other artifacts you want to include)
+├── logs/                          # All logs
+├── repos/                         # Any repo files
+└── README.md                       # Optional top-level readme
+# Create main folders
+mkdir -p ~/storage/shared/AiMetaverse/plan_aimeta001/{artifacts,logs,repos}
+# Move files in place (example)
+mv ~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1.zip.gpg ~/storage/shared/AiMetaverse/plan_aimeta001/artifacts/
+mv ~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1-checksum.sha256 ~/storage/shared/AiMetaverse/plan_aimeta001/artifacts/
+#!/data/data/com.termux/files/usr/bin/bash
+# setup_plan_aimeta001.sh
+# Creates unified plan_aimeta001 structure for AiMetaverse
+# 1️⃣ Base path
+BASE=~/storage/shared/AiMetaverse/plan_aimeta001
+# 2️⃣ Create main directories
+mkdir -p "$BASE/artifacts"
+mkdir -p "$BASE/logs"
+mkdir -p "$BASE/repos"
+echo "✅ Directories created: artifacts, logs, repos"
+# 3️⃣ Move encrypted zip and checksum to artifacts
+ZIP_SRC=~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1.zip.gpg
+CHECKSUM_SRC=~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1-checksum.sha256
+[ -f "$ZIP_SRC" ] && mv "$ZIP_SRC" "$BASE/artifacts/" && echo "✅ Moved zip to artifacts"
+[ -f "$CHECKSUM_SRC" ] && mv "$CHECKSUM_SRC" "$BASE/artifacts/" && echo "✅ Moved checksum to artifacts"
+# 4️⃣ Optional: move any logs from old location
+OLD_LOGS=~/sovereign-gumroad/logs/*
+if compgen -G "$OLD_LOGS" > /dev/null; then     mv $OLD_LOGS "$BASE/logs/" && echo "✅ Moved logs"; fi
+# 5️⃣ Optional: move repos
+OLD_REPOS=~/sovereign-gumroad/repos/*
+if compgen -G "$OLD_REPOS" > /dev/null; then     mv $OLD_REPOS "$BASE/repos/" && echo "✅ Moved repos"; fi
+# 6️⃣ Confirmation
+echo "📂 Final plan_aimeta001 structure:"
+tree -L 2 "$BASE" 2>/dev/null || ls -R "$BASE"
+echo "✅ Setup complete!"
+# Decrypt the archive
+gpg --output ~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1.zip --decrypt ~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1.zip.gpg
+# Verify checksum
+sha256sum -c ~/storage/shared/AiMetaverse/plan_aimeta001/Sovereign_AI_Runner_Stack_v1-checksum.sha256
+# Go to the directory
+cd ~/storage/shared/AiMetaverse/plan_aimeta001
+# List to confirm
+ls -l
+sha256sum -c Sovereign_AI_Runner_Stack_v1-checksum.sha256
+cp /path/to/original/Sovereign_AI_Runner_Stack_v1-checksum.sha256 ~/storage/shared/AiMetaverse/plan_aimeta001/
+#!/data/data/com.termux/files/usr/bin/bash
+# setup_fullstack_aimeta.sh
+# Fully sets up plan_aimeta001 environment for AiMetaverse
+# 1️⃣ Base directory
+BASE=~/storage/shared/AiMetaverse/plan_aimeta001
+# 2️⃣ Create main directories
+mkdir -p "$BASE/artifacts"
+mkdir -p "$BASE/logs"
+mkdir -p "$BASE/repos"
+echo "✅ Directories created: artifacts, logs, repos"
+# 3️⃣ Move ZIP to artifacts if not already there
+ZIP_SRC="$BASE/Sovereign_AI_Runner_Stack_v1.zip"
+[ -f "$ZIP_SRC" ] && mv "$ZIP_SRC" "$BASE/artifacts/" && echo "✅ ZIP moved to artifacts"
+# 4️⃣ Generate checksum if missing
+CHECKSUM="$BASE/artifacts/Sovereign_AI_Runner_Stack_v1-checksum.sha256"
+if [ ! -f "$CHECKSUM" ]; then     cd "$BASE/artifacts";     sha256sum Sovereign_AI_Runner_Stack_v1.zip > Sovereign_AI_Runner_Stack_v1-checksum.sha256;     echo "✅ Checksum generated"; fi
+# 5️⃣ List contents for sanity check
+echo "📂 Directory structure:"
+tree -L 2 "$BASE" 2>/dev/null || ls -R "$BASE"
+# 6️⃣ Optional: Decrypt ZIP (if you had a GPG file)
+GPG_FILE="$BASE/artifacts/Sovereign_AI_Runner_Stack_v1.zip.gpg"
+if [ -f "$GPG_FILE" ]; then     gpg --output "$BASE/artifacts/Sovereign_AI_Runner_Stack_v1.zip" --decrypt "$GPG_FILE";     echo "✅ ZIP decrypted"; fi
+echo "✅ Fullstack setup complete!"
+cd ~/storage/shared/AiMetaverse/plan_aimeta001/artifacts
+sha256sum -c Sovereign_AI_Runner_Stack_v1-checksum.sha256
+cd ~/storage/shared/AiMetaverse/plan_aimeta001
+mv Sovereign_AI_Runner_Stack_v1.zip artifacts/
+mv Sovereign_AI_Runner_Stack_v1-checksum.sha256 artifacts/
+#!/data/data/com.termux/files/usr/bin/bash
+# install_sovereign.sh
+# YesQuidpro V2.1 Ultimate Fullstack Installer
+set -e
+LOGFILE=~/install_sovereign.log
+exec > >(tee -a "$LOGFILE") 2>&1
+echo "🚀 Starting Ultimate Fullstack Installation..."
+# -------------------------
+# 1️⃣ Base Paths and Files
+# -------------------------
+BASE=~/storage/shared/AiMetaverse/plan_aimeta001
+ARTIFACTS="$BASE/artifacts"
+LOGS="$BASE/logs"
+REPOS="$BASE/repos"
+ZIP_GPG="$BASE/Sovereign_AI_Runner_Stack_v1.zip.gpg"
+ZIP_DEC="$ARTIFACTS/Sovereign_AI_Runner_Stack_v1.zip"
+CHECKSUM="$BASE/Sovereign_AI_Runner_Stack_v1-checksum.sha256"
+FILES=(   "$ZIP_GPG"   "$CHECKSUM"   "$BASE/collection_20251210.txt"   "$BASE/README.md" )
+# -------------------------
+# 2️⃣ Create Directory Structure
+# -------------------------
+mkdir -p "$ARTIFACTS" "$LOGS" "$REPOS"
+echo "✅ Directories created: artifacts, logs, repos"
+# -------------------------
+# 3️⃣ Install Dependencies
+# -------------------------
+DEPENDENCIES=(gpg sha256sum unzip zip python3 pip tree)
+for pkg in "${DEPENDENCIES[@]}"; do     if ! command -v $pkg >/dev/null 2>&1; then         echo "⚠ Installing missing package: $pkg";         pkg install -y $pkg;     fi; done
+echo "✅ Dependencies verified"
+# -------------------------
+# 4️⃣ Copy / Validate Files
+# -------------------------
+for f in "${FILES[@]}"; do     if [ -f "$f" ]; then         cp "$f" "$ARTIFACTS/" && echo "✅ Copied $(basename $f) to artifacts";     else         echo "⚠ File missing: $f"
+    fi; done
+# -------------------------
+# 5️⃣ Decrypt ZIP
+# -------------------------
+if [ -f "$ZIP_GPG" ]; then     echo "🔒 Decrypting ZIP...";     gpg --yes --batch --output "$ZIP_DEC" --decrypt "$ZIP_GPG";     echo "✅ ZIP decrypted: $(basename $ZIP_DEC)"; fi
+# -------------------------
+# 6️⃣ Verify Checksum
+# -------------------------
+if [ -f "$CHECKSUM" ]; then     echo "🧾 Verifying checksum...";     (cd "$ARTIFACTS" && sha256sum -c "$(basename $CHECKSUM)" || echo "❌ Checksum FAILED");     echo "✅ Checksum verification complete"; fi
+# -------------------------
+# 7️⃣ Backup and Fix Configs
+# -------------------------
+cp ~/.bashrc ~/.bashrc.backup 2>/dev/null || true
+cp ~/.nanorc ~/.nanorc.backup 2>/dev/null || true
+echo "✅ Configs backed up"
+grep -qxF "export AI_METAVERSE_BASE=$BASE" ~/.bashrc || echo "export AI_METAVERSE_BASE=$BASE" >> ~/.bashrc
+echo "✅ .bashrc updated with AI_METAVERSE_BASE"
+# -------------------------
+# 8️⃣ Move old logs / repos
+# -------------------------
+OLD_LOGS=~/sovereign-gumroad/logs/*
+if compgen -G "$OLD_LOGS" > /dev/null; then     mv $OLD_LOGS "$LOGS/" && echo "✅ Old logs moved"; fi
+OLD_REPOS=~/sovereign-gumroad/repos/*
+if compgen -G "$OLD_REPOS" > /dev/null; then     mv $OLD_REPOS "$REPOS/" && echo "✅ Old repos moved"; fi
+# -------------------------
+# 9️⃣ Initialize Agents
+# -------------------------
+if [ -f "$ZIP_DEC" ]; then     echo "🤖 Running quick agent test...";     unzip -l "$ZIP_DEC" | head -10; fi
+# Example: you can also automatically launch agent scripts here
+# bash "$ARTIFACTS/agents/execute_plan.sh" &
+# -------------------------
+# 10️⃣ Setup Webhook (YesQuid)
+# -------------------------
+# Placeholder for webhook setup
+# export YESQUID_WEBHOOK_URL="https://yourwebhook.url"
+echo "🌐 YesQuid webhook ready (manual config may be required)"
+# -------------------------
+# 11️⃣ Final Report
+# -------------------------
+echo "✅ Fullstack Installation Complete!"
+tree -L 2 "$BASE" 2>/dev/null || ls -R "$BASE"
+echo "✨ To activate, run: source ~/.bashrc"
+echo "✨ Then check status: status"
+echo "💡 Log file: $LOGFILE"
+source ~/.bashrc
+status
+source ~/.bashrc
+type status
+nano ~/.bashrc
+source ~/.bashrc
+status
+echo $SHELL
+nano ~/.bashrc
+source ~/.bashrc
+status
+quicktest
+cd ~/storage/shared/AiMetaverse/plan_aimeta001/artifacts
+unzip -o Sovereign_AI_Runner_Stack_v1.zip

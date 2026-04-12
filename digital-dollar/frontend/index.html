@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Dollar — DD$</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Segoe UI',sans-serif;min-height:100vh}
+.header{background:#111;border-bottom:1px solid #00ff8822;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:1.5rem;font-weight:900;color:#00ff88}
+.status{background:#00ff8822;color:#00ff88;border:1px solid #00ff8844;padding:0.3rem 1rem;border-radius:50px;font-size:0.85rem}
+.hero{text-align:center;padding:4rem 2rem;background:linear-gradient(135deg,#0a0a0a,#0a1a0a)}
+.dd-symbol{font-size:5rem;font-weight:900;color:#00ff88;text-shadow:0 0 60px #00ff8888}
+h1{font-size:2.5rem;margin:1rem 0;background:linear-gradient(90deg,#00ff88,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tagline{color:#888;font-size:1.2rem;margin-bottom:3rem}
+.wallet-card{background:#111;border:1px solid #00ff8844;border-radius:20px;padding:2rem;max-width:400px;margin:0 auto 2rem;text-align:center}
+.balance{font-size:3rem;font-weight:900;color:#00ff88}
+.balance-label{color:#666;font-size:0.9rem;margin-top:0.3rem}
+.wallet-id{color:#444;font-size:0.75rem;margin-top:0.5rem;font-family:monospace}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:400px;margin:0 auto 3rem}
+.btn{padding:1rem;border:none;border-radius:12px;cursor:pointer;font-size:1rem;font-weight:700;transition:all 0.3s}
+.btn-primary{background:linear-gradient(135deg,#00ff88,#00cc66);color:#000}
+.btn-secondary{background:#111;color:#00ff88;border:1px solid #00ff8844}
+.btn:hover{transform:scale(1.03)}
+.fingerprint-btn{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#00ff88,#00cc66);border:none;cursor:pointer;font-size:2.5rem;margin:1rem auto;display:block;animation:pulse 2s infinite;box-shadow:0 0 40px #00ff8844}
+@keyframes pulse{0%,100%{box-shadow:0 0 40px #00ff8844}50%{box-shadow:0 0 80px #00ff88aa}}
+.section{padding:2rem;max-width:500px;margin:0 auto}
+.section h3{color:#00ff88;margin-bottom:1rem;font-size:1.2rem}
+.input{width:100%;background:#111;border:1px solid #333;color:#fff;padding:0.8rem 1rem;border-radius:8px;font-size:1rem;margin-bottom:0.8rem}
+.input:focus{outline:none;border-color:#00ff88}
+.tx-list{background:#111;border-radius:12px;overflow:hidden}
+.tx-item{padding:1rem;border-bottom:1px solid #1a1a1a;display:flex;justify-content:space-between}
+.tx-item:last-child{border:none}
+.tx-type{color:#00ff88;font-size:0.85rem;font-weight:700}
+.tx-amount{font-weight:700}
+.msg{padding:1rem;border-radius:8px;margin:0.5rem 0;font-size:0.9rem;min-height:2.5rem}
+.msg.success{background:#00ff8811;border:1px solid #00ff8844;color:#00ff88}
+.msg.error{background:#ff000011;border:1px solid #ff000044;color:#ff4444}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;padding:2rem;max-width:500px;margin:0 auto;text-align:center}
+.stat-num{font-size:2rem;font-weight:900;color:#00ff88}
+.stat-label{color:#666;font-size:0.8rem}
+footer{text-align:center;padding:2rem;color:#333;border-top:1px solid #111;margin-top:3rem}
+footer span{color:#00ff88}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo">DD$ Digital Dollar</div>
+    <div class="status" id="apiStatus">⚡ Connecting...</div>
+</div>
+
+<div class="hero">
+    <div class="dd-symbol">DD$</div>
+    <h1>Your Face Is Your Wallet</h1>
+    <p class="tagline">Sovereign biometric currency by FacePrintPay</p>
+
+    <div class="wallet-card" id="walletCard">
+        <div class="balance" id="balance">--</div>
+        <div class="balance-label">Digital Dollars</div>
+        <div class="wallet-id" id="walletId">Not enrolled</div>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-primary" onclick="showSection('pay')">💵 Pay</button>
+        <button class="btn btn-secondary" onclick="showSection('send')">📤 Send</button>
+        <button class="btn btn-secondary" onclick="showSection('enroll')">👆 Enroll</button>
+        <button class="btn btn-secondary" onclick="showSection('history')">📋 History</button>
+    </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+    <div><div class="stat-num" id="statWallets">0</div><div class="stat-label">Wallets</div></div>
+    <div><div class="stat-num" id="statSupply">0</div><div class="stat-label">DD$ Supply</div></div>
+    <div><div class="stat-num" id="statTx">0</div><div class="stat-label">Transactions</div></div>
+</div>
+
+<!-- ENROLL -->
+<div class="section" id="section-enroll" style="display:none">
+    <h3>👆 Enroll in Digital Dollar</h3>
+    <input class="input" id="enrollName" placeholder="Your full name">
+    <input class="input" id="enrollId" placeholder="User ID (phone or email)">
+    <button class="fingerprint-btn" onclick="enroll()">👆</button>
+    <p style="text-align:center;color:#888;font-size:0.9rem">Touch to enroll with fingerprint</p>
+    <div class="msg" id="enrollMsg"></div>
+</div>
+
+<!-- PAY -->
+<div class="section" id="section-pay" style="display:none">
+    <h3>💵 Pay with Digital Dollar</h3>
+    <input class="input" id="payUserId" placeholder="Your User ID">
+    <input class="input" id="payMerchant" placeholder="Merchant ID">
+    <input class="input" id="payAmount" type="number" placeholder="Amount (DD$)">
+    <input class="input" id="payMemo" placeholder="Memo (optional)">
+    <button class="fingerprint-btn" onclick="pay()">👆</button>
+    <p style="text-align:center;color:#888;font-size:0.9rem">Touch to pay biometrically</p>
+    <div class="msg" id="payMsg"></div>
+</div>
+
+<!-- SEND -->
+<div class="section" id="section-send" style="display:none">
+    <h3>📤 Send Digital Dollars</h3>
+    <input class="input" id="sendFrom" placeholder="Your Wallet ID">
+    <input class="input" id="sendTo" placeholder="Recipient Wallet ID">
+    <input class="input" id="sendAmount" type="number" placeholder="Amount (DD$)">
+    <input class="input" id="sendMemo" placeholder="Memo (optional)">
+    <button class="btn btn-primary" style="width:100%" onclick="send()">Send DD$</button>
+    <div class="msg" id="sendMsg"></div>
+</div>
+
+<!-- HISTORY -->
+<div class="section" id="section-history" style="display:none">
+    <h3>📋 Transaction History</h3>
+    <div class="tx-list" id="txList">
+        <div style="padding:2rem;text-align:center;color:#444">Loading...</div>
+    </div>
+</div>
+
+<footer>
+    © 2026 <span>FacePrintPay Inc.</span> | Digital Dollar DD$ | Cygel White<br>
+    Greensboro, NC · Powered by Constellation25 · Bitcoin OTS Anchored
+</footer>
+
+<script>
+const API = 'http://localhost:3005';
+let currentWallet = localStorage.getItem('dd_wallet');
+
+async function init() {
+    try {
+        const r = await fetch(`${API}/`);
+        const d = await r.json();
+        document.getElementById('apiStatus').textContent = '✅ Online';
+        document.getElementById('statWallets').textContent = d.stats.total_wallets;
+        document.getElementById('statSupply').textContent = d.stats.total_supply;
+        document.getElementById('statTx').textContent = d.stats.total_transactions;
+    } catch {
+        document.getElementById('apiStatus').textContent = '❌ Offline';
+    }
+    if (currentWallet) loadBalance();
+}
+
+async function loadBalance() {
+    try {
+        const r = await fetch(`${API}/wallet/${currentWallet}/balance`);
+        const d = await r.json();
+        document.getElementById('balance').textContent = d.balance + ' DD$';
+        document.getElementById('walletId').textContent = currentWallet;
+    } catch {}
+}
+
+async function enroll() {
+    const name = document.getElementById('enrollName').value;
+    const userId = document.getElementById('enrollId').value;
+    if (!name || !userId) return showMsg('enrollMsg', 'Enter name and ID', 'error');
+
+    showMsg('enrollMsg', '👆 Scanning fingerprint...', 'success');
+    try {
+        const r = await fetch(`${API}/wallet/enroll`, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ user_id: userId, name })
+        });
+        const d = await r.json();
+        if (d.success) {
+            currentWallet = d.wallet_id;
+            localStorage.setItem('dd_wallet', currentWallet);
+            showMsg('enrollMsg', `✅ Enrolled! Wallet: ${d.wallet_id} | +${d.welcome_bonus} DD$ bonus`, 'success');
+            loadBalance();
+        } else {
+            showMsg('enrollMsg', '❌ ' + (d.error || 'Failed'), 'error');
+        }
+    } catch (err) {
+        showMsg('enrollMsg', '❌ API offline', 'error');
+    }
+}
+
+async function pay() {
+    const userId = document.getElementById('payUserId').value;
+    const merchantId = document.getElementById('payMerchant').value;
+    const amount = document.getElementById('payAmount').value;
+    const memo = document.getElementById('payMemo').value;
+
+    if (!userId || !merchantId || !amount) return showMsg('payMsg', 'Fill all fields', 'error');
+    showMsg('payMsg', '👆 Authenticating...', 'success');
+
+    try {
+        const r = await fetch(`${API}/pay`, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ user_id: userId, merchant_id: merchantId, amount, memo })
+        });
+        const d = await r.json();
+        if (d.success) {
+            showMsg('payMsg', `✅ Paid ${amount} DD$ | TX: ${d.tx.id}`, 'success');
+            loadBalance();
+        } else {
+            showMsg('payMsg', '❌ ' + (d.error || 'Failed'), 'error');
+        }
+    } catch {
+        showMsg('payMsg', '❌ API offline', 'error');
+    }
+}
+
+async function send() {
+    const from = document.getElementById('sendFrom').value;
+    const to = document.getElementById('sendTo').value;
+    const amount = document.getElementById('sendAmount').value;
+    const memo = document.getElementById('sendMemo').value;
+
+    if (!from || !to || !amount) return showMsg('sendMsg', 'Fill all fields', 'error');
+    try {
+        const r = await fetch(`${API}/wallet/send`, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ from, to, amount, biometric_session: 'verified', memo })
+        });
+        const d = await r.json();
+        d.success ? showMsg('sendMsg', `✅ Sent ${amount} DD$`, 'success') :
+                    showMsg('sendMsg', '❌ ' + d.error, 'error');
+        loadBalance();
+    } catch {
+        showMsg('sendMsg', '❌ API offline', 'error');
+    }
+}
+
+async function loadHistory() {
+    try {
+        const r = await fetch(`${API}/transactions`);
+        const d = await r.json();
+        const list = document.getElementById('txList');
+        if (d.transactions.length === 0) {
+            list.innerHTML = '<div style="padding:2rem;text-align:center;color:#444">No transactions yet</div>';
+            return;
+        }
+        list.innerHTML = d.transactions.reverse().map(tx => `
+            <div class="tx-item">
+                <div>
+                    <div class="tx-type">${tx.type}</div>
+                    <div style="color:#666;font-size:0.75rem">${new Date(tx.timestamp).toLocaleString()}</div>
+                    ${tx.memo ? `<div style="color:#555;font-size:0.75rem">${tx.memo}</div>` : ''}
+                </div>
+                <div class="tx-amount" style="color:${tx.type==='MINT'?'#00ff88':tx.from?'#ff6666':'#00ff88'}">
+                    ${tx.type==='PAYMENT'||tx.type==='TRANSFER'?'-':'+'} ${tx.amount} DD$
+                </div>
+            </div>`).join('');
+    } catch {}
+}
+
+function showSection(name) {
+    ['enroll','pay','send','history'].forEach(s => {
+        document.getElementById(`section-${s}`).style.display = s===name ? 'block' : 'none';
+    });
+    if (name === 'history') loadHistory();
+}
+
+function showMsg(id, msg, type) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = msg; el.className = `msg ${type}`; }
+}
+
+init();
+setInterval(loadBalance, 10000);
+</script>
+</body>
+</html>

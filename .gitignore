@@ -1,0 +1,7 @@
+artifacts/storage/outputs/logs/
+*.log
+artifacts/storage/outputs/logs/
+logs/
+artifacts/storage/outputs/logs/
+*.log
+.vercel

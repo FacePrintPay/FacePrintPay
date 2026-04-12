@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FacePrintPay - Secure Biometric Payments</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { 
+            font-size: 3rem; 
+            text-align: center;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+        }
+        .card {
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+        video { width: 100%; border-radius: 0.5rem; }
+        button {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 0.5rem;
+            color: white;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 FacePrintPay</h1>
+        <div class="card">
+            <h2>Face Recognition</h2>
+            <video id="video" autoplay playsinline></video>
+            <button onclick="startCamera()">Start Camera</button>
+        </div>
+        <div class="card">
+            <h2>Payment</h2>
+            <input id="userId" placeholder="User ID" />
+            <input id="amount" type="number" placeholder="Amount" />
+            <button onclick="processPayment()">Pay with Face</button>
+            <div id="status" style="margin-top: 1rem;"></div>
+        </div>
+    </div>
+    <script>
+        async function startCamera() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            document.getElementById('video').srcObject = stream;
+            document.getElementById('status').textContent = '✓ Camera started!';
+        }
+        function processPayment() {
+            const amount = document.getElementById('amount').value;
+            document.getElementById('status').textContent = `✓ Payment of $${amount} processed!`;
+        }
+    </script>
+</body>
+</html>

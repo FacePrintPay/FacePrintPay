@@ -1,0 +1,10 @@
+{
+  "invoice_id": "INV-20251210-52f7b763-01-013",
+  "task_id": "52f7b763-01-013",
+  "task_title": "S1.013 - Market & Problem Validation",
+  "amount": 25,
+  "payment_method": "$ThaCyg",
+  "status": "pending",
+  "generated_at": "2025-12-10T05:32:06.371235",
+  "payment_url": "https://cash.app/$ThaCyg/25"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "faceprintpay-gateway",
+  "version": "3.0.0",
+  "description": "Central gateway for all services, vaults, and APIs",
+  "main": "gateway.js",
+  "author": "Cygel White",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "scripts": {
+    "start": "node gateway.js",
+    "dev": "node gateway.js"
+  }
+}

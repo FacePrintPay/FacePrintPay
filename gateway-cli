@@ -1,0 +1,65 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+GATEWAY="http://localhost:8080"
+
+case "$1" in
+    start)
+        ~/FacePrintPay/start.sh
+        ;;
+    stop)
+        ~/FacePrintPay/stop.sh
+        ;;
+    status)
+        ~/FacePrintPay/status.sh
+        ;;
+    test)
+        ~/FacePrintPay/test.sh
+        ;;
+    overview)
+        curl -s $GATEWAY/api/overview | jq
+        ;;
+    vaults)
+        curl -s $GATEWAY/api/vaults | jq
+        ;;
+    repos)
+        curl -s $GATEWAY/api/repos | jq
+        ;;
+    services)
+        curl -s $GATEWAY/api/services | jq
+        ;;
+    search)
+        if [ -z "$2" ]; then
+            echo "Usage: gateway-cli search <query>"
+            exit 1
+        fi
+        curl -s "$GATEWAY/api/search?q=$2" | jq
+        ;;
+    compile)
+        curl -s -X POST $GATEWAY/api/compile-all | jq
+        ;;
+    deploy)
+        curl -s -X POST $GATEWAY/api/deploy | jq
+        ;;
+    logs)
+        tail -f ~/FacePrintPay/logs/gateway.log
+        ;;
+    *)
+        echo "FacePrintPay Gateway - CLI Tool"
+        echo ""
+        echo "Usage: gateway-cli <command> [args]"
+        echo ""
+        echo "Commands:"
+        echo "  start       Start all services"
+        echo "  stop        Stop all services"
+        echo "  status      Check service status"
+        echo "  test        Run system tests"
+        echo "  overview    System overview"
+        echo "  vaults      List all vaults"
+        echo "  repos       List repositories"
+        echo "  services    Service status"
+        echo "  search      Search (usage: gateway-cli search <query>)"
+        echo "  compile     Compile all data"
+        echo "  deploy      Deploy services"
+        echo "  logs        View gateway logs"
+        ;;
+esac

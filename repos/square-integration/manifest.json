@@ -1,0 +1,6 @@
+{
+  "name": "FacePrintPay Biometric Auth",
+  "description": "Pay-by-face for Square Terminal drive-thrus",
+  "permissions": ["PAYMENTS_WRITE", "CUSTOMERS_WRITE"],
+  "redirect_urls": ["https://cleanbuildfresh.vercel.app/auth/square/callback"]
+}
