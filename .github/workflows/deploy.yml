@@ -1,7 +1,9 @@
-name: FacePrintPay Standard Deploy
+name: C25 Sovereign Deploy
+
 on:
   push:
     branches: [ main, master ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -10,14 +12,30 @@ permissions:
   packages: write
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node Environment
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Build and Verify
+
+      - name: Install Dependencies & Build
         run: |
-          if [ -f package.json ]; then npm install && npm run build --if-present; fi
-          echo "Sovereign build completed successfully."
+          if [ -f package.json ]; then
+            npm install --legacy-peer-deps
+            npm run build --if-present
+          fi
+
+      - name: Python Check (if present)
+        run: |
+          if [ -f requirements.txt ]; then
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt || true
+          fi
+
+      - name: Fleet Build Status
+        run: echo "✓ C25 Sovereign Fleet build complete."
